@@ -1,0 +1,8 @@
+{
+  "name": "api-worker",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "repository": "https://github.com/Wasyto/api-worker.git",
+  "author": "leonardo-amaral, ylost",
+  "license": "MIT"
+}

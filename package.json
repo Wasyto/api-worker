@@ -1,6 +1,6 @@
 {
   "name": "api-worker",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Javascript Library, with pourpouse to make to do better requests API REST.",
   "author": "leonardo-amaral, yLost",
   "main": "lib/index.js",

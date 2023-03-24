@@ -85,9 +85,9 @@ export async function apiWorker({
       throw new Error('Response type is not defined ' + responseType);
     }
 
-    return onSuccess?.(response);
+    return onSuccess && onSuccess(response);
   } catch (err) {
-    onError?.(err);
+    onError && onError(err);
   }
 }
 

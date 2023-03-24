@@ -1,8 +1,6 @@
-import { ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse } from './types';
+import { ApiWorkerConfig, ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse } from './types';
 
-console.log('Lost is gay!');
-
-async function apiWorker({
+export async function apiWorker({
   url,
   abortController,
   body,
@@ -10,10 +8,10 @@ async function apiWorker({
   method = ApiWorkerMethod.GET,
   responseType = ApiWorkerResponse.JSON,
   timeout,
+  urlParams,
   onError,
   onSuccess,
 }: ApiWorkerProps) {
-  console.log(typeof headers);
   try {
     if (typeof url !== 'string') throw 'url must be a string';
 
@@ -21,17 +19,32 @@ async function apiWorker({
       throw 'abortController must be instaced by AbortController';
     }
 
+    let apiWorkerConfig: ApiWorkerConfig = {
+      method,
+      headers,
+    };
+
+    const isExternal = url.startsWith('http');
+
+    if (!isExternal) {
+      url = process.env.GATEWAY_API + url;
+    }
+
+    if (method === null || undefined) {
+      throw 'Method is undefined, please choose a method.';
+    }
+
     if (method === ApiWorkerMethod.GET) {
       // Body request in GET Method isn't allowed
       body = undefined;
     }
 
-    const isExternal = url.startsWith('http');
-
-    let apiWorkerConfig: any = {
-      method,
-      headers,
-    };
+    if (method === ApiWorkerMethod.DELETE || ApiWorkerMethod.PUT) {
+      if (body != null || undefined) {
+        console.log('Your body is empty!');
+      }
+      !isExternal ? (url = url + urlParams) : url;
+    }
 
     if (method !== ApiWorkerMethod.GET) {
       if (typeof body == 'object') {
@@ -47,25 +60,14 @@ async function apiWorker({
       }
     }
 
-    if (!isExternal) {
-      url = process.env.GATEWAY_API + url;
-    }
     const request = await fetch(url, apiWorkerConfig);
     if (!request.ok) {
       throw request.status + ' - ' + request.statusText;
     }
+
     let response;
-
-    // I tried do a bomb, if you want cool, set it on fire!
-
-    // const formatedResponseType = (Object.keys(ApiWorkerResponse) as (keyof typeof ApiWorkerResponse)[]).map(
-    //   (key, index) => {
-    //     console.log(key);
-    //     if (responseType === key) {
-
-    //     }
-    //   },
-    // );
+    let responseTypes = ApiWorkerResponse;
+    console.log(responseTypes);
 
     if (responseType === ApiWorkerResponse.JSON) {
       response = request.json();
@@ -82,6 +84,8 @@ async function apiWorker({
     if (responseType == null || undefined) {
       throw 'Response type is not defined ' + responseType;
     }
+
+    return onSuccess && onSuccess(response);
   } catch (err) {
     onError?.(err);
   }

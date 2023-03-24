@@ -22,6 +22,9 @@ export type ApiWorkerProps = {
   abortController?: AbortController;
   timeout?: number;
   responseType?: ApiWorkerResponse;
+  urlParams?: string;
   onSuccess?: (data: any) => void;
   onError?: (data: any) => void;
 };
+
+export type ApiWorkerConfig = Pick<ApiWorkerProps, 'method' & 'headers' & 'body'>;

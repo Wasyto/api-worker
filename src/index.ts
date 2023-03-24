@@ -39,9 +39,9 @@ export async function apiWorker({
     }
 
     if (method === ApiWorkerMethod.DELETE || ApiWorkerMethod.PUT) {
-      if (body !== null || undefined) {
-        throw new Error('Your body is empty!');
-      }
+      // if (!body) {
+      //   throw new Error('Your body is empty!');
+      // }
       if (!isExternal) {
         url = url + urlParams;
       }

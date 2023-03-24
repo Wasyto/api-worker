@@ -21,14 +21,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yLost/ylost-ui.git"
+    "url": "git+https://github.com/Wasyto/api-worker"
   },
   "keywords": [],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/yLost/ylost-ui/issues"
   },
-  "homepage": "https://github.com/yLost/ylost-ui#readme",
+  "homepage": "https://github.com/Wasyto",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/user-event": "^13.5.0",

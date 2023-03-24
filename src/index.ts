@@ -7,16 +7,15 @@ export async function apiWorker({
   headers,
   method = ApiWorkerMethod.GET,
   responseType = ApiWorkerResponse.JSON,
-  timeout,
   urlParams,
   onError,
   onSuccess,
 }: ApiWorkerProps) {
   try {
-    if (typeof url !== 'string') throw 'url must be a string';
+    if (typeof url !== 'string') throw new Error('url must be a string');
 
     if (abortController && !(abortController instanceof AbortController)) {
-      throw 'abortController must be instaced by AbortController';
+      throw new Error('abortController must be instaced by AbortController');
     }
 
     let apiWorkerConfig: ApiWorkerConfig = {
@@ -30,8 +29,8 @@ export async function apiWorker({
       url = process.env.GATEWAY_API + url;
     }
 
-    if (method === null || undefined) {
-      throw 'Method is undefined, please choose a method.';
+    if (!method) {
+      throw new Error('Method is undefined, please choose a method.');
     }
 
     if (method === ApiWorkerMethod.GET) {
@@ -40,14 +39,16 @@ export async function apiWorker({
     }
 
     if (method === ApiWorkerMethod.DELETE || ApiWorkerMethod.PUT) {
-      if (body != null || undefined) {
-        console.log('Your body is empty!');
+      if (body !== null || undefined) {
+        throw new Error('Your body is empty!');
       }
-      !isExternal ? (url = url + urlParams) : url;
+      if (!isExternal) {
+        url = url + urlParams;
+      } else url;
     }
 
     if (method !== ApiWorkerMethod.GET) {
-      if (typeof body == 'object') {
+      if (typeof body === 'object') {
         apiWorkerConfig = {
           ...apiWorkerConfig,
           body: JSON.stringify(body),
@@ -61,13 +62,12 @@ export async function apiWorker({
     }
 
     const request = await fetch(url, apiWorkerConfig);
+
     if (!request.ok) {
-      throw request.status + ' - ' + request.statusText;
+      throw new Error(request.status + ' - ' + request.statusText);
     }
 
     let response;
-    let responseTypes = ApiWorkerResponse;
-    console.log(responseTypes);
 
     if (responseType === ApiWorkerResponse.JSON) {
       response = request.json();
@@ -81,11 +81,11 @@ export async function apiWorker({
     if (responseType === ApiWorkerResponse.TEXT) {
       response = request.text();
     }
-    if (responseType == null || undefined) {
-      throw 'Response type is not defined ' + responseType;
+    if (responseType === null || undefined) {
+      throw new Error('Response type is not defined ' + responseType);
     }
 
-    return onSuccess && onSuccess(response);
+    return onSuccess?.(response);
   } catch (err) {
     onError?.(err);
   }

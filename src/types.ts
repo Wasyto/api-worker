@@ -18,7 +18,7 @@ export type ApiWorkerProps = {
   url: string;
   method?: ApiWorkerMethod;
   body?: any;
-  headers?: Object;
+  headers?: object;
   abortController?: AbortController;
   timeout?: number;
   responseType?: ApiWorkerResponse;

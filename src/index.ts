@@ -44,7 +44,7 @@ export async function apiWorker({
       }
       if (!isExternal) {
         url = url + urlParams;
-      } else url;
+      }
     }
 
     if (method !== ApiWorkerMethod.GET) {
@@ -85,9 +85,9 @@ export async function apiWorker({
       throw new Error('Response type is not defined ' + responseType);
     }
 
-    return onSuccess && onSuccess(response);
+    return onSuccess?.(response);
   } catch (err) {
-    onError && onError(err);
+    return onError?.(err);
   }
 }
 

@@ -48,8 +48,8 @@ import { apiWorker } from 'api-worker';
 
 ## Example
 
-Performing in `GET` request.
-
+First declare, yours endpoint in a file.
+-services.ts
 ```js
 import { apiWorker } from 'api-worker';
 
@@ -70,21 +70,6 @@ export function getExample({
     onError,
   });
 }
-
-//Second and last step, is you call your function.
-getExample({
-  onSucces: (data) => console.log(data),
-  onError: (error) => console.log(error),
-});
-```
-
-Performing in `POST` request.
-
-```js
-import { apiWorker } from 'api-worker';
-
-// First you need configurate, your endpoint
-// services/endpoints.ts
 export function setExample({
   body,
   onSuccess = (data: any) => {},
@@ -103,11 +88,28 @@ export function setExample({
     onError,
   });
 }
+```
+
 
 //Second and last step, is you call your function.
-setExample({
-  body:  {example: 'Wasyto'},
-  onSucces: (data) => console.log(data),
-  onError: (error) => console.log(error),
-});
+```tsx
+import { setExample, getExample } from "./services.ts"
+import useEffect from "react"
+   
+function App(){
+ UseEffect(() => {
+   setExample({
+     body:  {example: 'Wasyto'},
+     onSucces: (data) => console.log(data),
+     onError: (error) => console.log(error),
+   });
+   getExample({
+     onSucces: (data) => console.log(data),
+     onError: (error) => console.log(error),
+   });
+}, [])  
+   return (
+      <div className="app"></div>
+   )
+}
 ```

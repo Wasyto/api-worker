@@ -1,7 +1,7 @@
 {
   "name": "api-worker",
-  "version": "1.0.7",
-  "description": "A prototype ui for my personal projects",
+  "version": "1.0.8",
+  "description": "Javascript Library, with pourpouse to make to do better requests API REST.",
   "author": "leonardo-amaral, yLost",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -55,6 +55,7 @@ import { apiWorker } from 'api-worker';
 
 // First you need configurate, your endpoint
 // services/endpoints.ts
+
 export function getExample({
   onSuccess = (data: any) => {},
   onError = (data: any) => {},
@@ -91,7 +92,7 @@ export function setExample({
 ```
 
 
-//Second and last step, is you call your function.
+Second and last step, is you call your function.
 ```tsx
 import { setExample, getExample } from "./services.ts"
 import useEffect from "react"

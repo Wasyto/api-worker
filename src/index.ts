@@ -1,4 +1,4 @@
-import { ApiWorkerConfig, ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse } from './types';
+import { ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse } from './types';
 
 export async function apiWorker({
   url,
@@ -7,7 +7,6 @@ export async function apiWorker({
   headers,
   method = ApiWorkerMethod.GET,
   responseType = ApiWorkerResponse.JSON,
-  urlParams,
   onError,
   onSuccess,
 }: ApiWorkerProps) {
@@ -18,7 +17,7 @@ export async function apiWorker({
       throw new Error('abortController must be instaced by AbortController');
     }
 
-    let apiWorkerConfig: ApiWorkerConfig = {
+    let config: any = {
       method,
       headers,
     };
@@ -33,35 +32,15 @@ export async function apiWorker({
       throw new Error('Method is undefined, please choose a method.');
     }
 
-    if (method === ApiWorkerMethod.GET) {
-      // Body request in GET Method isn't allowed
-      body = undefined;
-    }
-
-    if (method === ApiWorkerMethod.DELETE || ApiWorkerMethod.PUT) {
-      // if (!body) {
-      //   throw new Error('Your body is empty!');
-      // }
-      if (!isExternal) {
-        url = url + urlParams;
-      }
-    }
-
     if (method !== ApiWorkerMethod.GET) {
       if (typeof body === 'object') {
-        apiWorkerConfig = {
-          ...apiWorkerConfig,
-          body: JSON.stringify(body),
-        };
+        config['body'] = JSON.stringify(body);
       } else {
-        apiWorkerConfig = {
-          ...apiWorkerConfig,
-          body,
-        };
+        config['body'] = body;
       }
     }
 
-    const request = await fetch(url, apiWorkerConfig);
+    const request = await fetch(url, config);
 
     if (!request.ok) {
       throw new Error(request.status + ' - ' + request.statusText);
@@ -69,23 +48,41 @@ export async function apiWorker({
 
     let response;
 
-    if (responseType === ApiWorkerResponse.JSON) {
-      response = request.json();
-    }
-    if (responseType === ApiWorkerResponse.BLOB) {
-      response = request.blob();
-    }
-    if (responseType === ApiWorkerResponse.ARRAY_BUFFER) {
-      response = request.arrayBuffer();
-    }
-    if (responseType === ApiWorkerResponse.TEXT) {
-      response = request.text();
-    }
-    if (responseType === null || undefined) {
-      throw new Error('Response type is not defined ' + responseType);
-    }
+    switch (responseType) {
+      // Process as JSON
+      case ApiWorkerResponse.JSON:
+        response = await request.json();
 
-    return onSuccess?.(response);
+        if (response.errors || response.error) {
+          return onError?.(response);
+        }
+
+        return onSuccess?.(response);
+
+      // Process as blob file
+      case ApiWorkerResponse.BLOB:
+        response = await request.blob();
+
+        if (response.type === 'text/html') {
+          return onError?.('File maybe not found');
+        }
+
+        return onSuccess?.(response);
+
+      // Process as array buffer
+      case ApiWorkerResponse.ARRAY_BUFFER:
+        response = await request.arrayBuffer();
+
+        return onSuccess?.(response);
+
+      // Process as text
+      case ApiWorkerResponse.TEXT:
+        response = await request.text();
+
+        return onSuccess?.(response);
+      default:
+        throw new Error("ResponseType doens't match");
+    }
   } catch (err) {
     return onError?.(err);
   }

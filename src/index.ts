@@ -1,4 +1,5 @@
-import { ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse } from './types';
+
+import { ApiWorkerConfig, ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse, ApiWorkerTokenType } from './types';
 
 export async function apiWorker({
   url,
@@ -9,6 +10,7 @@ export async function apiWorker({
   responseType = ApiWorkerResponse.JSON,
   onError,
   onSuccess,
+  apiToken,
 }: ApiWorkerProps) {
   try {
     if (typeof url !== 'string') throw new Error('url must be a string');

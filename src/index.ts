@@ -1,5 +1,4 @@
-
-import { ApiWorkerConfig, ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse, ApiWorkerTokenType } from './types';
+import { ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse } from './types';
 
 export async function apiWorker({
   url,

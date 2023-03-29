@@ -23,7 +23,7 @@
     "type": "git",
     "url": "git+https://github.com/Wasyto/api-worker"
   },
-  "keywords": [],
+  "keywords": ["API", "API REST", "POST", "GET", "DELETE", "FETCH", "AXIOS", "REQUEST", "RESPONSE", "ONSUCCES", "ONERROR", "PROMISSE"],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/yLost/ylost-ui/issues"

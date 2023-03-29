@@ -17,7 +17,7 @@ export async function apiWorker({
       throw new Error('abortController must be instaced by AbortController');
     }
 
-    let config: any = {
+    const config: any = {
       method,
       headers,
     };
@@ -34,9 +34,9 @@ export async function apiWorker({
 
     if (method !== ApiWorkerMethod.GET) {
       if (typeof body === 'object') {
-        config['body'] = JSON.stringify(body);
+        config.body = JSON.stringify(body);
       } else {
-        config['body'] = body;
+        config.body = body;
       }
     }
 

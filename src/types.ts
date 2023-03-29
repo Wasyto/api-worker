@@ -1,5 +1,3 @@
-import { ApiWorkerToken } from '.';
-
 export enum ApiWorkerMethod {
   GET = 'GET',
   POST = 'POST',
@@ -32,5 +30,4 @@ export type ApiWorkerProps = {
   responseType?: ApiWorkerResponse;
   onSuccess?: (data: any) => void;
   onError?: (data: any) => void;
-  apiToken?: typeof ApiWorkerToken;
 };

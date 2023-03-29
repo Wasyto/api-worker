@@ -1,4 +1,18 @@
-import { ApiWorkerConfig, ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse } from './types';
+import { ApiWorkerConfig, ApiWorkerMethod, ApiWorkerProps, ApiWorkerResponse, ApiWorkerTokenType } from './types';
+
+export class ApiWorkerToken {
+  config: ApiWorkerTokenType;
+
+  constructor(config: ApiWorkerTokenType) {
+    this.config = config;
+  }
+
+  getToken() {
+    if (!this.config) {
+      return this.config;
+    }
+  }
+}
 
 export async function apiWorker({
   url,
@@ -10,6 +24,7 @@ export async function apiWorker({
   urlParams,
   onError,
   onSuccess,
+  apiToken,
 }: ApiWorkerProps) {
   try {
     if (typeof url !== 'string') throw new Error('url must be a string');
